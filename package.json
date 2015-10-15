@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See see http://unarchiver.c3.cx/commandline",
   "keywords": [
     "Unarchiver",

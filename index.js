@@ -8,11 +8,30 @@
     var quote = require('shell-quote').quote;
     var child_process = require('child_process');
     var exec = child_process.exec;
+    var os = require('os');
 
 
     module.exports = unpackAll.list = unpackAll;
 
     var archiveTypePattern = /: [A-Z,7]*$/g;
+
+    //var osType = os.type().toLowerCase();
+    //var isMac = function () {
+    //    return osType === 'darwin';
+    //};
+    //var isLinux = function () {
+    //    return osType === 'linux';
+    //};
+    //var isWindows = function () {
+    //    return osType.indexOf('win')>-1;
+    //};
+
+    var escapeFileName = function(s) {
+        return '"'+s+'"';
+        //if (isWindows()) return '"'+s+'"';
+        //// '"'+cmd.replace(/(["\s'$`\\])/g,'\\$1')+'"'
+        //return s;
+    };
 
     var defaultListCallback = function (err, files, text) {
         if (err) return log.error(err);
@@ -25,6 +44,7 @@
         return !isNaN(x) && eval(x).toString().length == parseInt(eval(x)).toString().length;
     };
 
+
     unpackAll.defaultListFilter = function defaultListFilter(s) {
         return s && s != ''
             && s.indexOf('\r') == -1
@@ -32,7 +52,7 @@
             && !s.match(archiveTypePattern);
     };
 
-    unpackAll.unpack = function list(archiveFile, options, callback) {
+    unpackAll.unpack = function unpack(archiveFile, options, callback) {
         if (!archiveFile) archiveFile = options.archiveFile;
         if (!archiveFile) return log.error("Error: archiveFile or options.archiveFile missing.");
 
@@ -45,12 +65,13 @@
         var ar = [unar];
 
         // Archive file (source):
-        ar.push(archiveFile);
+        ar.push('SOURCEFILE');
+        //ar.push(archiveFile);
 
         // -output-directory (-o) <string>: The directory to write the contents of the archive to. Defaults to the current directory.
         ar.push('-o');
         var targetDir = options.targetDir;
-        if (!targetDir) targetDir = './';
+        if (!targetDir) targetDir = path.join(os.tmpdir(), 'tmp');
         ar.push(targetDir);
 
         // -force-overwrite (-f): Always overwrite files when a file to be unpacked already exists on disk. By default, the program asks the user if possible, otherwise skips the file.
@@ -117,7 +138,9 @@
 
         if (!options.quiet) log.info('command', quote(ar));
 
-        exec(quote(ar), function (err, stdout, stderr) {
+        var cmd  = quote(ar).replace('SOURCEFILE', escapeFileName(archiveFile));
+        if (!options.quiet) log.info('cmd', cmd);
+        exec(cmd, function (err, stdout, stderr) {
             if (err) return callback(err, null);
             if (stderr && stderr.length > 0) return callback('Error: ' + stderr, null);
             if (stdout && stdout.length > 0) {
@@ -141,7 +164,7 @@
         var ar = [lsar];
 
         // Archive file (source):
-        ar.push(archiveFile);
+        ar.push('SOURCEFILE');
 
         // -no-recursion (-nr): Do not attempt to extract archives contained in other archives. For instance, when unpacking a .tar.gz file, only unpack the .gz file and not its contents.
         if (options.noRecursion) ar.push('-nr');
@@ -175,7 +198,9 @@
         // -json-ascii (-ja): Print the listing in JSON format, encoded as pure ASCII text.
         if (options.jsonAscii) ar.push('-ja');
 
-        exec(quote(ar), function (err, stdout, stderr) {
+        var cmd  = quote(ar).replace('SOURCEFILE', escapeFileName(archiveFile));
+        if (!options.quiet) log.info('cmd', cmd);
+        exec(cmd, function (err, stdout, stderr) {
             if (err) return callback(err, null);
             if (stderr && stderr.length > 0) return callback('Error: ' + stderr, null);
 
