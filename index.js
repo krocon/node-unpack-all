@@ -120,11 +120,10 @@
             if (Array.isArray(options.indexes)) {
                 options.indexes.forEach(function (idx) {
                     ar.push('-i');
-                    ar.push(idx);
+                    ar.push(''+idx); // string!
                 });
             } else if (isInt(options.indexes)) {
-                ar.push('-i');
-                ar.push(options.indexes);
+                console.error('options.indexes must be an array of integer, but it is: ' + JSON.stringify(options.indexes))
             }
         } else if (options.files) {
             if (Array.isArray(options.files)) {
