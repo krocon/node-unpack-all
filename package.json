@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "type": "module",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [
@@ -34,9 +34,7 @@
   ],
   "dependencies": {
     "npmlog": "^4.1.2",
-    "shell-quote": "^1.7.2"
-  },
-  "devDependencies": {
+    "shell-quote": "^1.7.2",
     "system-install": "^1.0.4",
     "unzipper": "^0.10.10",
     "wget-improved": "^3.2.0"
