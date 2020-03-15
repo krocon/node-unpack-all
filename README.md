@@ -11,34 +11,47 @@ Window users can use a 'portable' version of [Unarchiver](http://unarchiver.c3.c
                     
 ## Usage 
 ```js
-var ua = require('unpack-all');
+import unpackAll from 'unpack-all';
+
 // list only:
-ua.list(archiveFile<String>, options<Object>, callback<function>)
+unpackAll.list(archiveFile<String>, options<Object>, callback<function>);
+// or list sync:
+const res = await unpackAll.listSync(archiveFile<String>, options<Object>);
+
 // unpack:
-ua.unpack(archiveFile<String>, options<Object>, callback<function>)
+unpackAll.unpack(archiveFile<String>, options<Object>, callback<function>);
+// or unpack sync:
+const files = await unpackAll.unpackSync(archiveFile<String>, options<Object>);
 ```
 
 ### Examples
 
 #### Example: unpack file
 ```js
-require('unpack-all')
-.unpack('test/abc.rar', {
-    targetDir: 'out'
-}, function(err, files, text) {
-   if (err) return console.error(err);
-   if (files) console.log('files', files);
-   if (text) console.log('text', text);
-});
+import unpackAll from 'unpack-all';
+
+unpackAll.unpack(
+    'test/abc.rar', 
+    { 
+      targetDir: 'out' 
+    }, 
+    (err, files, text) => {
+       if (err) return console.error(err);
+       if (files) console.log('files', files);
+       if (text) console.log('text', text);
+    });
 ```
          
 #### Example: list content
 ```js
+import unpackAll from 'unpack-all';
+
 function cb(err, files, text) {
     if (err) return console.error(err);
     console.log('files', files);
 }
-require('unpack-all').list('test/abc.rar', {}, cb);
+
+unpackAll.list('test/abc.rar', {}, cb);
 ```                    
                     
                     
@@ -48,6 +61,7 @@ Key       | Possible values        | Comment
 --------- | -----------------------|-------------------------------------------------
 quiet     | true/false (default)   | true will reduce logging for unpacking 
 targetDir | \<String>              | The directory to write the contents of the archive to. Defaults to the current directory.
+randomTargetSubDir | true/false (default)              | If true, a random subfolder will created for each unpack operation in target dir.
 forceOverwrite | true/false (default)  | if null, tmp dir will created automatically
 forceDirectory | true/false/undefined  | Always create a containing directory for the contents of the unpacked archive. By default, a directory is created if there is more than one top-level file or folder. 
 noDirectory | true/false/undefined     | Never create a containing directory for the contents of the unpacked archive. 
@@ -60,4 +74,3 @@ encoding | \<String>                   | The encoding to use for filenames in th
 
  
                     
- 

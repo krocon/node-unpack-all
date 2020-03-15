@@ -13,6 +13,32 @@ import os from 'os';
 const exec = child_process.exec;
 const archiveTypePattern = /: [A-Z,7]*$/g;
 
+function walk(dir, done) {
+  let results = [];
+  fs.readdir(dir, (err, list) => {
+    if (err) return done(err);
+    let i = 0;
+
+    (function next() {
+      let file = list[i++];
+      if (!file) return done(null, results);
+
+      file = path.resolve(dir, file);
+      fs.stat(file, (err, stat) => {
+        if (stat && stat.isDirectory()) {
+          walk(file, (err, res) => {
+            results = results.concat(res);
+            next();
+          });
+        } else {
+          results.push(file);
+          next();
+        }
+      });
+    })();
+  });
+}
+
 function escapeFileName(s) {
   return '"' + s + '"';
 }
@@ -220,36 +246,35 @@ function list(archiveFile, options, callback) {
   // });
 }
 
-function walk(dir, done) {
-  let results = [];
-  fs.readdir(dir, (err, list) => {
-    if (err) return done(err);
-    let i = 0;
-
-    (function next() {
-      let file = list[i++];
-      if (!file) return done(null, results);
-
-      file = path.resolve(dir, file);
-      fs.stat(file, (err, stat) => {
-        if (stat && stat.isDirectory()) {
-          walk(file, (err, res) => {
-            results = results.concat(res);
-            next();
-          });
-        } else {
-          results.push(file);
-          next();
-        }
-      });
-    })();
+async function listSync(archiveFile, options) {
+  return await new Promise((resolve, reject) => {
+    list(archiveFile, options, (err, files, text) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(files);
+      }
+    });
   });
 }
 
+async function unpackSync(archiveFile, options) {
+  return await new Promise((resolve, reject) => {
+    unpack(archiveFile, options, (err, files, text) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(files);
+      }
+    });
+  });
+}
 
 const unpackAll = {};
 unpackAll.list = list;
+unpackAll.listSync = listSync;
 unpackAll.unpack = unpack;
+unpackAll.unpackSync = unpackSync;
 unpackAll.defaultListFilter = defaultListFilter;
 
 export {unpackAll as default};

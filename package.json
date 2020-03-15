@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.13",
+  "version": "0.0.20",
   "type": "module",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [
@@ -26,7 +26,8 @@
   "main": "index.mjs",
   "scripts": {
     "postinstall": "node postinstall.mjs",
-    "demo": "node demo.mjs"
+    "demo": "node demo.mjs",
+    "test": "mocha test/test-unpack-list.spec.js"
   },
   "files": [
     "index.mjs",
@@ -35,6 +36,12 @@
     "demoFirstEntry.mjs",
     "!test"
   ],
+  "readmeFilename": "README.md",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krocon/node-unpack-all"
+  },
   "dependencies": {
     "npmlog": "^4.1.2",
     "shell-quote": "^1.7.2",
@@ -42,10 +49,8 @@
     "unzipper": "^0.10.10",
     "wget-improved": "^3.2.0"
   },
-  "readmeFilename": "README.md",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/krocon/node-unpack-all"
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.1.0"
   }
 }
