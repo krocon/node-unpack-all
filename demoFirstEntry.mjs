@@ -2,7 +2,7 @@
 
 import unpackAll from './index.mjs';
 
-const archive = 'test/abc (12).rar';
+const archive = 'test/sb.cbr';
 const options = {
   targetDir: 'tmp',
   indexes: [0],
@@ -17,7 +17,7 @@ unpackAll.list(archive, options, (err, files, text) => {
   const coverName = files[options.indexes];
   console.info('coverName', coverName);
 
-  unpackAll.unpack(archive, options, function (err, files, text) {
+  unpackAll.unpack(archive, options, (err, files, text) => {
     if (err) return console.error(err);
 
     console.info('files', files);

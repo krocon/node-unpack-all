@@ -2,6 +2,8 @@
 
 // see http://unarchiver.c3.cx/commandline
 // unar and lsar
+import fs from 'fs';
+import path from 'path';
 
 import log from 'npmlog';
 import quote from 'shell-quote';
@@ -53,6 +55,11 @@ function unpack(archiveFile, options, callback) {
   ar.push('-o');
   let targetDir = options.targetDir;
   if (!targetDir) targetDir = path.join(os.tmpdir(), 'tmp');
+
+  if (options.randomTargetSubDir) {
+    targetDir = targetDir + '/t' + Date.now()
+  }
+
   ar.push(targetDir);
 
   // -force-overwrite (-f): Always overwrite files when a file to be unpacked already exists on disk. By default, the program asks the user if possible, otherwise skips the file.
@@ -128,7 +135,14 @@ function unpack(archiveFile, options, callback) {
       if (stdout.indexOf('No files extracted') > -1) return callback('Error: No files extracted', null);
     }
 
-    callback(null, targetDir, stdout);
+    if (options.randomTargetSubDir) {
+      walk(targetDir, (err, res) => {
+        if (!options.quiet) console.info(res);
+        callback(null, targetDir, res.join('\n'));
+      });
+    } else {
+      callback(null, targetDir, stdout);
+    }
   });
 } // unpackAll.unpack
 
@@ -182,7 +196,7 @@ function list(archiveFile, options, callback) {
   let cmd = quote.quote(ar).replace('SOURCEFILE', escapeFileName(archiveFile));
   if (!options.quiet) log.info('cmd', cmd);
 
-  exec(cmd, (err, stdout, stderr) => {
+  const proc = exec(cmd, (err, stdout, stderr) => {
     if (err) return callback(err, null);
     if (stderr && stderr.length > 0) return callback('Error: ' + stderr, null);
 
@@ -194,6 +208,41 @@ function list(archiveFile, options, callback) {
     } else {
       return callback('Error: no files foound in archive. ' + stderr, null);
     }
+  });
+  // let list = [];
+  // proc.stdout.setEncoding('utf8');
+  // proc.stdout.on('data', function (chunk) {
+  //   list.push(chunk);
+  // });
+  //
+  // proc.stdout.on('end', function () {
+  //   callback(list.join());
+  // });
+}
+
+function walk(dir, done) {
+  let results = [];
+  fs.readdir(dir, (err, list) => {
+    if (err) return done(err);
+    let i = 0;
+
+    (function next() {
+      let file = list[i++];
+      if (!file) return done(null, results);
+
+      file = path.resolve(dir, file);
+      fs.stat(file, (err, stat) => {
+        if (stat && stat.isDirectory()) {
+          walk(file, (err, res) => {
+            results = results.concat(res);
+            next();
+          });
+        } else {
+          results.push(file);
+          next();
+        }
+      });
+    })();
   });
 }
 
