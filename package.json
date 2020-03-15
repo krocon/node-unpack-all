@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [
@@ -23,14 +23,21 @@
     "email": "krocon@gmail.com",
     "url": "https://gui.expert/"
   },
-  "main": "index.js",
+  "main": "index.mjs",
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
   "files": [
-    "index.js",
+    "index.mjs",
     "!test"
   ],
   "dependencies": {
     "npmlog": "^4.1.2",
     "shell-quote": "^1.7.2"
+  },
+  "devDependencies": {
+    "node-wget": "^0.4.3",
+    "unzipper": "^0.10.10"
   },
   "readmeFilename": "README.md",
   "license": "MIT",
