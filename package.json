@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [
@@ -36,8 +36,9 @@
     "shell-quote": "^1.7.2"
   },
   "devDependencies": {
-    "node-wget": "^0.4.3",
-    "unzipper": "^0.10.10"
+    "system-install": "^1.0.4",
+    "unzipper": "^0.10.10",
+    "wget-improved": "^3.2.0"
   },
   "readmeFilename": "README.md",
   "license": "MIT",

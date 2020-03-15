@@ -2,7 +2,12 @@
 
 import fs from 'fs';
 import path from 'path';
+import wget from 'wget-improved';
+import unzip from 'unzipper';
+import getInstallCmd from 'system-install';
+import child_process from 'child_process';
 
+const exec = child_process.exec;
 const unarAppfile = (process.platform === "darwin") ? 'unar1.8.1.zip' : 'unar1.8.1_win.zip';
 const unarAppurl = 'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/theunarchiver/';
 
@@ -28,33 +33,33 @@ if (windows) {
     .catch(console.error);
 
 } else {
-
-  const system_installer = require('system-installer').installer;
-  system_installer('unar')
-    .then(function () {
+  const cmd = getInstallCmd('unar');
+  exec(cmd, (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+    } else {
       console.info('Unar installed successful');
-    })
-    .catch(console.error);
+    }
+  });
 }
 
 
 function getExtractUnar(urlsource, filesource, destination) {
-  import node_wget from 'node-wget';
-  import unzip from 'unzipper';
   console.log('Downloading ' + urlsource + ' ...');
 
   return new Promise(function (resolve, reject) {
-    node_wget({url: urlsource, dest: filesource}, err => {
-      if (err) {
-        return reject('Error downloading file: ' + err);
-      }
+
+    let download = wget.download(urlsource, filesource, {});
+    download.on('error', reject);
+    download.on('start', console.log);
+    download.on('progress', console.log);
+
+    download.on('end', output => {
+      console.info('download finsihed.');
+
       const unzipfile = unzip.Extract({path: destination});
-      unzipfile.on('error', err => {
-        reject(err);
-      });
-      unzipfile.on('close', () => {
-        resolve();
-      });
+      unzipfile.on('error', reject);
+      unzipfile.on('close', resolve);
       fs.createReadStream(filesource).pipe(unzipfile);
     });
   });
