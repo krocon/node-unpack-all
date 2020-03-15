@@ -16,34 +16,6 @@ const url = unarAppurl + unarAppfile;
 const source = path.join(cwd, unarAppfile);
 const windows = (process.platform === "win32") || (process.platform === "darwin");
 
-if (windows) {
-  getExtractUnar(url, source, cwd)
-    .then(function () {
-      fs.unlink(source, (err) => {
-        if (err) console.error(err);
-      });
-      if (process.platform !== "win32") {
-        const chmod = ['unar', 'lsar'];
-        chmod.forEach(s => {
-          fs.chmodSync(path.join(cwd, s), 755)
-        });
-      }
-      console.info('Unar installed successful');
-    })
-    .catch(console.error);
-
-} else {
-  const cmd = getInstallCmd('unar');
-  exec(cmd, (err, stdout, stderr) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.info('Unar installed successful');
-    }
-  });
-}
-
-
 function getExtractUnar(urlsource, filesource, destination) {
   console.log('Downloading ' + urlsource + ' ...');
 
@@ -52,7 +24,7 @@ function getExtractUnar(urlsource, filesource, destination) {
     let download = wget.download(urlsource, filesource, {});
     download.on('error', reject);
     download.on('start', console.log);
-    download.on('progress', console.log);
+    // download.on('progress', console.log);
 
     download.on('end', output => {
       console.info('download finsihed.');
@@ -64,3 +36,34 @@ function getExtractUnar(urlsource, filesource, destination) {
     });
   });
 }
+
+export function postinstall() {
+  if (windows) {
+    getExtractUnar(url, source, cwd)
+      .then(function () {
+        fs.unlink(source, (err) => {
+          if (err) console.error(err);
+        });
+        if (process.platform !== "win32") {
+          const chmod = ['unar', 'lsar'];
+          chmod.forEach(s => {
+            fs.chmodSync(path.join(cwd, s), 755)
+          });
+        }
+        console.info('Unar installed successful');
+      })
+      .catch(console.error);
+
+  } else {
+    const cmd = getInstallCmd('unar');
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.info('Unar installed successful');
+      }
+    });
+  }
+}
+
+postinstall();
