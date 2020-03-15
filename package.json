@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "type": "module",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [
@@ -25,11 +25,13 @@
   },
   "main": "index.mjs",
   "scripts": {
-    "postinstall": "node postinstall.mjs"
+    "postinstall": "node postinstall.mjs",
+    "demo": "node demo.mjs"
   },
   "files": [
     "index.mjs",
     "postinstall.mjs",
+    "demo.mjs",
     "!test"
   ],
   "dependencies": {

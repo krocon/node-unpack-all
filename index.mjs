@@ -116,9 +116,9 @@ function unpack(archiveFile, options, callback) {
     }
   }
 
-  if (!options.quiet) log.info('command', quote(ar));
+  if (!options.quiet) log.info('command', quote.quote(ar));
 
-  let cmd = quote(ar).replace('SOURCEFILE', escapeFileName(archiveFile));
+  let cmd = quote.quote(ar).replace('SOURCEFILE', escapeFileName(archiveFile));
   if (!options.quiet) log.info('cmd', cmd);
 
   exec(cmd, (err, stdout, stderr) => {
