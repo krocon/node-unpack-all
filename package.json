@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "license": "MIT",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [
@@ -71,10 +71,11 @@
     "size-limit": "^6.0.3",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
-    "typescript": "^3.9.10",
+    "typescript": "^3.9.10"
+  },
+  "dependencies": {
     "system-install": "^1.0.4",
     "unzipper": "^0.10.11",
     "wget-improved": "^3.2.1"
-  },
-  "dependencies": {}
+  }
 }
