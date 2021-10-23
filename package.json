@@ -1,7 +1,7 @@
 {
   "name": "unpack-all",
-  "version": "0.0.20",
-  "type": "module",
+  "version": "0.0.21",
+  "license": "MIT",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [
     "Unarchiver",
@@ -23,34 +23,58 @@
     "email": "krocon@gmail.com",
     "url": "https://gui.expert/"
   },
-  "main": "index.mjs",
-  "scripts": {
-    "postinstall": "node postinstall.mjs",
-    "demo": "node demo.mjs",
-    "test": "mocha test/test-unpack-list.spec.js"
-  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "files": [
-    "index.mjs",
-    "postinstall.mjs",
-    "demo.mjs",
-    "demoFirstEntry.mjs",
-    "!test"
+    "dist",
+    "src",
+    "postinstall.mjs"
   ],
-  "readmeFilename": "README.md",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/krocon/node-unpack-all"
+  "engines": {
+    "node": ">=10"
   },
-  "dependencies": {
-    "npmlog": "^4.1.2",
-    "shell-quote": "^1.7.2",
-    "system-install": "^1.0.4",
-    "unzipper": "^0.10.10",
-    "wget-improved": "^3.2.0"
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "postinstall": "node postinstall.mjs"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "module": "dist/unpack-all.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/unpack-all.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/unpack-all.esm.js",
+      "limit": "10 KB"
+    }
+  ],
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^7.1.0"
-  }
+    "@size-limit/preset-small-lib": "^6.0.3",
+    "husky": "^7.0.4",
+    "size-limit": "^6.0.3",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^3.9.10",
+    "system-install": "^1.0.4",
+    "unzipper": "^0.10.11",
+    "wget-improved": "^3.2.1"
+  },
+  "dependencies": {}
 }
