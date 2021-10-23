@@ -11,26 +11,28 @@ Window users can use a 'portable' version of [Unarchiver](http://unarchiver.c3.c
 
 ## Usage
 ```js
-import unpackAll from 'unpack-all';
+import { list as unpckList } from 'unpack-all';
+import { unpack as unpck } from 'unpack-all';
+import { unpackSync } from 'unpack-all';
 
 // list only:
-unpackAll.list(archiveFile<String>, options<Object>, callback<function>);
+unpckList(archiveFile<String>, options<Object>, callback<function>);
 // or list sync:
 const res = await unpackAll.listSync(archiveFile<String>, options<Object>);
 
 // unpack:
-unpackAll.unpack(archiveFile<String>, options<Object>, callback<function>);
+unpck(archiveFile<String>, options<Object>, callback<function>);
 // or unpack sync:
-const files = await unpackAll.unpackSync(archiveFile<String>, options<Object>);
+const files = await unpackSync(archiveFile<String>, options<Object>);
 ```
 
 ### Examples
 
 #### Example: unpack file
 ```js
-import unpackAll from 'unpack-all';
+import { unpack as unpck } from 'unpack-all';
 
-unpackAll.unpack(
+unpck(
     'test/abc.rar', 
     { 
       targetDir: 'out' 
@@ -44,14 +46,14 @@ unpackAll.unpack(
 
 #### Example: list content
 ```js
-import unpackAll from 'unpack-all';
+import { list as unpckList } from 'unpack-all';
 
 function cb(err, files, text) {
     if (err) return console.error(err);
     console.log('files', files);
 }
 
-unpackAll.list('test/abc.rar', {}, cb);
+unpckList('test/abc.rar', {}, cb);
 ```                    
 
 
