@@ -1,6 +1,6 @@
 {
   "name": "unpack-all",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "license": "MIT",
   "description": "Unpacker for node.js, wrapper for unar and lsar. See hunarchiver.c3.cx",
   "keywords": [

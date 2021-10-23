@@ -69,14 +69,14 @@ function isInt(x: any) {
     return !isNaN(x) && eval(x).toString().length === parseInt(eval(x)).toString().length;
 }
 
-function defaultListFilter(s: string) {
-    return s && s !== ''
+function defaultListFilter(s: string): boolean {
+    return !!(s && s !== ''
         && s.indexOf('\r') === -1
         && s.indexOf('\n') === -1
-        && !s.match(archiveTypePattern);
+        && !s.match(archiveTypePattern));
 }
 
-function unpack(
+export function unpack(
     archiveFile: string | undefined,
     options: Partial<UnpackOptionsIf>,
     callback: UnpackCallbackType) {
@@ -197,7 +197,7 @@ function unpack(
 } // unpackAll.unpack
 
 
-function list(
+export function list(
     archiveFile: string | undefined,
     options: Partial<UnpackListOptionsIf>,
     callback: UnpackCallbackType) {
@@ -256,7 +256,7 @@ function list(
 
         let lines = stdout.split(/(\r?\n)/g);
         if (lines.length > 0) {
-            let files = lines.filter(unpackAll.defaultListFilter);
+            let files = lines.filter(defaultListFilter);
             return callback(null, files, '');
 
         } else {
@@ -274,7 +274,7 @@ function list(
     // });
 }
 
-async function listSync(archiveFile: string, options: UnpackOptionsIf) {
+export async function listSync(archiveFile: string, options: UnpackOptionsIf) {
     return await new Promise((resolve, reject) => {
         list(archiveFile, options, (err: string | undefined, files: string[] | null, _: string) => {
             if (err) {
@@ -286,7 +286,7 @@ async function listSync(archiveFile: string, options: UnpackOptionsIf) {
     });
 }
 
-async function unpackSync(archiveFile: string, options: UnpackOptionsIf) {
+export async function unpackSync(archiveFile: string, options: UnpackOptionsIf) {
     return await new Promise((resolve, reject) => {
         unpack(archiveFile, options, (err, files, _) => {
             if (err) {
@@ -298,12 +298,3 @@ async function unpackSync(archiveFile: string, options: UnpackOptionsIf) {
     });
 }
 
-// if ('development' === process.env.NODE_ENV) {
-
-export const unpackAll = {
-    list,
-    listSync,
-    unpack,
-    unpackSync,
-    defaultListFilter
-}
