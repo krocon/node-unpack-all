@@ -59,10 +59,10 @@ function escapeFileName(s: string): string {
     return '"' + s + '"';
 }
 
-function defaultListCallback(err: any, files: string[] | null, text: string) {
+function defaultListCallback(err: any, _files: string[] | null, _text: string) {
     if (err) return console.error(err);
-    if (files) console.info('files', files);
-    if (text) console.info('text', text);
+    // if (files) console.log('files', files);
+    // if (text) console.log('text', text);
 }
 
 function isInt(x: any) {
